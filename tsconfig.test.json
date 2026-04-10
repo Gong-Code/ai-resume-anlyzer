@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "verbatimModuleSyntax": false,
+    "module": "CommonJS",
+    "moduleResolution": "node"
+  },
+  "include": ["__tests__/**/*", "jest.setup.ts"]
+}
