@@ -5,5 +5,5 @@
     "module": "CommonJS",
     "moduleResolution": "node"
   },
-  "include": ["__tests__/**/*", "jest.setup.ts"]
+  "include": ["__tests__/**/*", "jest.setup.ts", "types/**/*"]
 }
