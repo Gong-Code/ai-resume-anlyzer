@@ -7,4 +7,8 @@ export default defineConfig({
   resolve: {
     tsconfigPaths: true,
   },
+  ssr: {
+    noExternal: [],
+    external: ["pdfjs-dist"],
+  },
 });

@@ -226,23 +226,60 @@ export const AIResponseFormat = `
     }`;
 
 export const prepareInstructions = ({
+  companyName = null,
   jobTitle,
   jobDescription,
-  AIResponseFormat,
+  AIResponseFormat: format = AIResponseFormat,
 }: {
-  jobTitle: string;
-  jobDescription: string;
-  AIResponseFormat: string;
+  companyName?: string | null;
+  jobTitle: string | null;
+  jobDescription: string | null;
+  AIResponseFormat?: string;
 }) =>
-  `You are an expert in ATS (Applicant Tracking System) and resume analysis.
-  Please analyze and rate this resume and suggest how to improve it.
-  The rating can be low if the resume is bad.
-  Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.
-  If there is a lot to improve, don't hesitate to give low scores. This is to help the user to improve their resume.
-  If available, use the job description for the job user is applying to to give more detailed feedback.
-  If provided, take the job description into consideration.
-  The job title is: ${jobTitle}
-  The job description is: ${jobDescription}
-  Provide the feedback using the following format: ${AIResponseFormat}
-  Return the analysis as a JSON object, without any other text and without the backticks.
-  Do not include any other text or comments.`;
+  [
+    "You are a senior recruiter and ATS (Applicant Tracking System) specialist with 15+ years of experience in talent acquisition and resume screening.",
+    "",
+    "## Context",
+    companyName ? `Company: ${companyName}` : "",
+    jobTitle ? `Target Role: ${jobTitle}` : "",
+    jobDescription ? `Job Description:\n${jobDescription}` : "",
+    "",
+    "## Task",
+    "Analyze the attached resume thoroughly and provide a structured evaluation.",
+    "Please analyze and rate this resume and suggest how to improve it.",
+    "The rating can be low if the resume is bad.",
+    "Be thorough and detailed. Don't be afraid to point out any mistakes or areas for improvement.",
+    "If there is a lot to improve, don't hesitate to give low scores. This is to help the user improve their resume.",
+    "",
+    "## Required Output",
+    "",
+    "### 1. ATS Compatibility Score (0-100)",
+    "- Rate how likely this resume is to pass common ATS filters (e.g., Workday, Greenhouse, Lever).",
+    "- Flag formatting issues that cause parsing failures: tables, columns, headers/footers, images, special characters, non-standard section headings.",
+    "",
+    "### 2. Keyword Match Analysis",
+    "- List the critical keywords and phrases from the job description.",
+    "- Identify which keywords are present in the resume and which are missing.",
+    "- Suggest where and how to naturally incorporate missing keywords.",
+    "",
+    "### 3. Section-by-Section Review",
+    "For each resume section (Summary, Experience, Skills, Education, etc.):",
+    "- Strengths: what works well.",
+    "- Weaknesses: what needs improvement.",
+    "- Specific rewrite suggestions with before/after examples.",
+    "",
+    "### 4. Impact & Metrics",
+    "- Identify bullet points that lack quantifiable achievements.",
+    "- Suggest how to add metrics (percentages, dollar amounts, team sizes, timelines).",
+    "",
+    "### 5. Overall Recommendations",
+    "- Top 3 highest-priority changes to make.",
+    "- Any red flags a recruiter would notice (gaps, job hopping, vague descriptions).",
+    "- Tailoring advice specific to the target company and role.",
+    "",
+    `Provide the feedback using the following format: ${format}`,
+    "Return the analysis as a JSON object, without any other text and without the backticks.",
+    "Do not include any other text or comments.",
+  ]
+    .filter(Boolean)
+    .join("\n");
