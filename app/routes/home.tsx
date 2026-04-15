@@ -2,7 +2,7 @@ import type { Route } from "./+types/home";
 import { resumes } from "../../constants";
 import { useEffect, useState } from "react";
 import { usePuterStore } from "~/lib/puter";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import Navbar from "~/components/Navbar";
 import ResumeCard from "~/components/ResumeCard";
@@ -18,7 +18,7 @@ export default function Home() {
   const { auth, kv } = usePuterStore();
   const navigate = useNavigate();
   const [resumes, setResumes] = useState<Resume[]>([]);
-  const [loadingResumes, setLoadingResumes] = useState(false);
+  const [loadingResumes, setLoadingResumes] = useState(true);
 
   useEffect(() => {
     if (!auth.isAuthenticated) navigate("/auth?next=/");
@@ -30,16 +30,20 @@ export default function Home() {
 
       const parsedResumes = items
         ?.map((item) => {
-          const json = item.value.startsWith("resume:")
-            ? item.value.slice(7)
-            : item.value;
+          const value =
+            typeof item.value === "string"
+              ? item.value
+              : JSON.stringify(item.value);
+          const json = value.startsWith("resume:") ? value.slice(7) : value;
           try {
             return JSON.parse(json) as Resume;
           } catch {
             return null;
           }
         })
-        .filter((item): item is Resume => item !== null)
+        .filter(
+          (item): item is Resume => item !== null && item.feedback != null,
+        )
         .slice(0, 6);
 
       setResumes(parsedResumes || []);
@@ -71,6 +75,16 @@ export default function Home() {
             {resumes.map((resume) => (
               <ResumeCard key={resume.id} resume={resume} />
             ))}
+          </div>
+        )}
+        {!loadingResumes && resumes.length === 0 && (
+          <div>
+            <Link
+              to="/upload"
+              className="primary-button w-fit text-xl font-semibold"
+            >
+              Upload Resume
+            </Link>
           </div>
         )}
       </section>
