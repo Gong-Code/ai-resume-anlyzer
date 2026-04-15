@@ -2,6 +2,14 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
 import ResumeCard from "~/components/ResumeCard";
 
+jest.mock("~/lib/puter", () => ({
+  usePuterStore: () => ({
+    fs: {
+      read: jest.fn().mockResolvedValue(undefined),
+    },
+  }),
+}));
+
 const mockResume: Resume = {
   id: "abc-123",
   companyName: "Acme Corp",
