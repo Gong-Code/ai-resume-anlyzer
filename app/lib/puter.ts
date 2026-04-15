@@ -328,30 +328,74 @@ export const usePuterStore = create<PuterStore>((set, get) => {
   };
 
   const feedback = async (path: string, message: string) => {
-    const puter = getPuter();
-    if (!puter) {
-      setError("Puter.js not available");
-      return;
-    }
+    // TODO: Uncomment below and remove mock when Puter credits reset
+    // const puter = getPuter();
+    // if (!puter) {
+    //   setError("Puter.js not available");
+    //   return;
+    // }
+    // return puter.ai.chat(
+    //   [
+    //     {
+    //       role: "user",
+    //       content: [
+    //         { type: "file", puter_path: path },
+    //         { type: "text", text: message },
+    //       ],
+    //     },
+    //   ],
+    //   { model: "claude-sonnet-4" },
+    // ) as Promise<AIResponse | undefined>;
 
-    return puter.ai.chat(
-      [
-        {
-          role: "user",
-          content: [
-            {
-              type: "file",
-              puter_path: path,
-            },
-            {
-              type: "text",
-              text: message,
-            },
-          ],
-        },
-      ],
-      { model: "claude-sonnet-4" },
-    ) as Promise<AIResponse | undefined>;
+    const mockFeedback = {
+      overallScore: 72,
+      ATS: {
+        score: 68,
+        tips: [
+          { type: "good", tip: "Clean single-column layout is ATS-friendly" },
+          { type: "improve", tip: "Add more keywords from the job description" },
+          { type: "improve", tip: "Use standard section headings like 'Work Experience' instead of custom ones" },
+        ],
+      },
+      toneAndStyle: {
+        score: 75,
+        tips: [
+          { type: "good", tip: "Professional tone", explanation: "The resume maintains a consistent professional voice throughout." },
+          { type: "improve", tip: "Avoid passive voice", explanation: "Several bullet points use passive constructions. Use active verbs like 'Led', 'Built', 'Delivered' instead." },
+          { type: "improve", tip: "Remove personal pronouns", explanation: "Avoid using 'I' or 'my' in resume bullet points. Start with action verbs directly." },
+        ],
+      },
+      content: {
+        score: 70,
+        tips: [
+          { type: "good", tip: "Relevant experience listed", explanation: "Work history aligns well with the target role." },
+          { type: "improve", tip: "Add quantifiable achievements", explanation: "Most bullet points describe responsibilities rather than results. Add metrics like percentages, dollar amounts, or team sizes." },
+          { type: "improve", tip: "Tailor summary to role", explanation: "The summary is too generic. Mention the specific role and key skills the employer is looking for." },
+        ],
+      },
+      structure: {
+        score: 78,
+        tips: [
+          { type: "good", tip: "Logical section ordering", explanation: "Sections flow well from summary to experience to education." },
+          { type: "improve", tip: "Keep to one page", explanation: "For most roles with under 10 years of experience, a single page resume is preferred by recruiters." },
+          { type: "improve", tip: "Add a skills section", explanation: "A dedicated skills section with keywords helps both ATS systems and quick recruiter scanning." },
+        ],
+      },
+      skills: {
+        score: 65,
+        tips: [
+          { type: "good", tip: "Technical skills present", explanation: "Core technical skills for the role are mentioned in the experience section." },
+          { type: "improve", tip: "List skills explicitly", explanation: "Create a dedicated skills section that lists hard skills, tools, and technologies as keywords." },
+          { type: "improve", tip: "Match job description keywords", explanation: "Cross-reference the job posting and add any missing skills you actually possess." },
+        ],
+      },
+    };
+
+    return {
+      message: {
+        content: JSON.stringify(mockFeedback),
+      },
+    } as AIResponse;
   };
 
   const img2txt = async (image: string | File | Blob, testMode?: boolean) => {

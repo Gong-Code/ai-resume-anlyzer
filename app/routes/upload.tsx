@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { usePuterStore } from "~/lib/puter";
 import { convertPdfToImage } from "~/lib/pdf2img";
-import { generateUUID } from "~/utils/formatSize";
+import { generateUUID } from "~/utils/generateUUID";
 import { prepareInstructions, AIResponseFormat } from "../../constants";
 
 import FileUploader from "~/components/FileUploader";
@@ -88,7 +88,7 @@ const Upload = () => {
 
     setStatusText("Analysis complete!");
 
-    console.log(data);
+    navigate(`/resume/${uuid}`);
   };
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
