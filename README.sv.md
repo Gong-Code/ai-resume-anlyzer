@@ -73,6 +73,35 @@ docker run -p 3000:3000 resumate
 
 ---
 
+## CI/CD - GitHub Actions
+
+Projektet anvander ett GitHub Actions-workflow (`.github/workflows/ci.yml`) som automatiskt kontrollerar kodkvaliteten vid varje andring.
+
+### Vad det gor
+
+Varje korning utfor dessa steg i ordning:
+
+1. **Checkout** - Klonar repot
+2. **Setup Node.js 20** - Installerar Node med npm-cache for snabbare korningar
+3. **Installera beroenden** - `npm ci` for en ren och reproducerbar installation
+4. **Typkontroll** - Fangar TypeScript-fel innan nagot annat kors
+5. **Kor tester** - Jest med tackningstrapport
+6. **Bygg** - Fullstandigt produktionsbygg for att fanga byggfel
+7. **Lighthouse CI** - Granskar prestanda, tillganglighet och basta praxis mot konfigurerade troskelvarden
+
+### Triggers (utlosare)
+
+| Trigger | Nar den kors | Varfor |
+|---------|-------------|-------|
+| `push` till `main` | Varje commit som pushas direkt till `main` | Sakerstaller att main-branchen alltid fungerar |
+| `pull_request` till `main` | Varje PR som oppnas eller uppdateras mot `main` | Fangar problem innan kod mergas - du ser pass/fail-status direkt pa PR:en |
+
+### Samtidighet (concurrency)
+
+Om du pushar flera commits snabbt eller uppdaterar en PR medan en tidigare korning fortfarande pagar, avbryts den aldre korningen automatiskt. Detta sparar CI-minuter och undviker att foraldrade kontroller koar upp.
+
+---
+
 ## Arkitekturbeslut
 
 - **Ingen traditionell backend** - Puter.js hanterar autentisering, lagring, databas och AI fran klientsidan. Inga serverkostnader, inga API-nycklar.

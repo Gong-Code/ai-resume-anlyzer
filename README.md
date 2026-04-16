@@ -73,6 +73,35 @@ docker run -p 3000:3000 resumate
 
 ---
 
+## CI/CD - GitHub Actions
+
+The project uses a GitHub Actions workflow (`.github/workflows/ci.yml`) that automatically checks code quality on every change.
+
+### What it does
+
+Each run executes these steps in order:
+
+1. **Checkout** - Clones the repository
+2. **Setup Node.js 20** - Installs Node with npm caching for faster runs
+3. **Install dependencies** - `npm ci` for a clean, reproducible install
+4. **Typecheck** - Catches TypeScript errors before anything else runs
+5. **Run tests** - Jest with coverage reporting
+6. **Build** - Full production build to catch build-time errors
+7. **Lighthouse CI** - Audits performance, accessibility, and best practices against configured thresholds
+
+### Triggers
+
+| Trigger | When it runs | Why |
+|---------|-------------|-----|
+| `push` to `main` | Every commit pushed directly to `main` | Ensures the main branch is always in a working state |
+| `pull_request` to `main` | Every PR opened or updated targeting `main` | Catches issues before code is merged - you see pass/fail status directly on the PR |
+
+### Concurrency
+
+If you push multiple commits quickly or update a PR while a previous run is still going, the older run is automatically cancelled. This saves CI minutes and avoids queuing up outdated checks.
+
+---
+
 ## Key Architecture Decisions
 
 - **No traditional backend** - Puter.js handles auth, storage, database, and AI from the client. Zero server costs, no API keys to manage.
