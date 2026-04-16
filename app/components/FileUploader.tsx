@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { formatSize } from "~/utils/formatSize";
 
@@ -42,9 +42,7 @@ const FileUploader = ({ onFileSelect }: FileUploaderProps) => {
                 <p className="text-sm font-medium text-gray-700 truncate max-w-xs mx-auto">
                   {file.name}
                 </p>
-                <p className="text-sm text-gray-500">
-                  {formatSize(file.size)}
-                </p>
+                <p className="text-sm text-gray-500">{formatSize(file.size)}</p>
               </div>
               <button
                 className="p-2 cursor-pointer"

@@ -4,7 +4,6 @@ export interface PdfConversionResult {
   error?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let pdfjsLib: any = null;
 
 const loadPdfJs = async () => {
@@ -41,7 +40,6 @@ export async function convertPdfToImage(
       canvas.toBlob(
         (blob) => {
           if (blob) {
-            // Create a File from the blob with the same name as the pdf
             const originalName = file.name.replace(/\.pdf$/i, "");
             const imageFile = new File([blob], `${originalName}.png`, {
               type: "image/png",
@@ -61,7 +59,7 @@ export async function convertPdfToImage(
         },
         "image/png",
         1.0,
-      ); // Set quality to maximum (1.0)
+      );
     });
   } catch (err) {
     return {
